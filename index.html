@@ -52,6 +52,12 @@ title: Home
       {% endif %}
     {% endfor %}
 
+    {% if high != paginator.total_pages %}
+    <li class="disabled">
+      <span>&hellip;</span>
+    </li>
+    {% endif %}
+
     {% if paginator.page != paginator.total_pages %}
       <li><a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">&rsaquo; <span class="sr-only">(next)</span></a></li>
       <li><a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', paginator.total_pages }}">&raquo; <span class="sr-only">(last)</span></a></li>
