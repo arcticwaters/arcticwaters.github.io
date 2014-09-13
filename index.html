@@ -3,35 +3,58 @@ layout: default
 title: Home
 ---
 
-<div class="posts">
+<section>
+  <h3>Recent blog entries</h3>
   {% for post in paginator.posts %}
-  <div class="post">
-    <h1 class="post-title">
-      <a href="{{ site.baseurl }}{{ post.url }}">
-        {{ post.title }}
-      </a>
-    </h1>
-
-    <span class="post-date">{{ post.date | date_to_string }}</span>
-
-    {{ post.content }}
-  </div>
+    <article>
+      <header>
+        <h1>
+          <a href="{{ post.url | prepent: site.baseurl | replace: '//', '/' }}">
+            {{ post.title }}
+          </a>
+        </h1>
+        <p>{{ post.date | date_to_string }}</p>
+      </header>
+      {{ post.excerpt }}
+    </article>
   {% endfor %}
-</div>
+</section>
 
-<div class="pagination">
-  {% if paginator.next_page %}
-    <a class="pagination-item older" href="{{ site.baseurl }}page{{paginator.next_page}}">Older</a>
-  {% else %}
-    <span class="pagination-item older">Older</span>
-  {% endif %}
-  {% if paginator.previous_page %}
-    {% if paginator.page == 2 %}
-      <a class="pagination-item newer" href="{{ site.baseurl }}">Newer</a>
-    {% else %}
-      <a class="pagination-item newer" href="{{ site.baseurl }}page{{paginator.previous_page}}">Newer</a>
+<nav class="text-center">
+  <ul class="pagination">
+    {% if paginator.previous_page %}
+      <li><a href="{{ site.baseurl }}">&laquo; <span class="sr-only">(first)</span></a></li>
+      <li><a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&lsaquo; <span class="sr-only">(previous)</span></a></li>
     {% endif %}
-  {% else %}
-    <span class="pagination-item newer">Newer</span>
-  {% endif %}
-</div>
+
+    {% assign half_width = site.pagination_width | divided_by: 2 | floor %}
+    {% assign low = paginator.page | minus: half_width %}
+    {% assign high = paginator.page | plus: half_width %}
+    {% if low < 1 %}
+      {% assign high = high | plus: 1 | minus: low %}
+      {% assign low = 1 %}
+    {% endif %}
+    {% if high > paginator.total_pages %}
+      {% assign low = low | plus: paginator.total_pages | minus: high %}
+      {% assign high = paginator.total_pages %}
+      {% if low < 1 %}
+        {% assign low = 1 %}
+      {% endif %}
+    {% endif %}
+
+    {% for i in (low..high) %}
+      {% if i == paginator.page %}
+        <li class="active"><span>{{ i }}</span></li>
+      {% elsif i == 1 %}
+          <li><a href="{{ site.baseurl }}">{{ i }}</a></li>
+      {% else %}
+          <li><a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', i }}">{{ i }}</a></li>
+      {% endif %}
+    {% endfor %}
+
+    {% if paginator.page != paginator.total_pages %}
+      <li><a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">&rsaquo; <span class="sr-only">(next)</span></a></li>
+      <li><a href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', paginator.total_pages }}">&raquo; <span class="sr-only">(last)</span></a></li>
+    {% endif %}
+  </ul>
+</nav>

@@ -8,12 +8,18 @@ permalink:        pretty
 # Setup
 title:            Andrew Schurman
 url:              http://arcticwaters.github.io/
-paginate:         1
+paginate:         5
+pagination_width: 7
 baseurl:          /
 author:
   name:           Andrew Schurman
   email:          arcticwaters@gmail.com
 timezone:         Canada/Pacific
+
+exclude:          ["LICENSE", "README.md", "lib/"]
+sass:
+  sass_dir:       .
+  style:          compressed
 
 # Custom vars
 version:          1.0.0
